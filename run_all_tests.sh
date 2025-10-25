@@ -107,13 +107,23 @@ main() {
     fi
     echo
     
-    # Test 2: Unit Tests
+    # Test 2: Unit Tests (Basic)
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
-    if run_test "Unit Tests (pytest)" "python -m pytest tests/test_simulator.py -v" "$PROJECT_DIR"; then
+    if run_test "Basic Unit Tests (pytest)" "python -m pytest tests/test_simulator.py -v" "$PROJECT_DIR"; then
         PASSED_TESTS=$((PASSED_TESTS + 1))
     else
         FAILED_TESTS=$((FAILED_TESTS + 1))
-        print_warning "Some unit tests failed, but continuing..."
+        print_warning "Some basic unit tests failed, but continuing..."
+    fi
+    echo
+    
+    # Test 2.5: Comprehensive Unit Tests
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    if run_test "Comprehensive Unit Tests (pytest)" "python -m pytest tests/test_comprehensive_unit_tests.py -v" "$PROJECT_DIR"; then
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+    else
+        FAILED_TESTS=$((FAILED_TESTS + 1))
+        print_warning "Some comprehensive unit tests failed, but continuing..."
     fi
     echo
     
@@ -294,6 +304,14 @@ main() {
     echo "Test Results:"
     echo "  - logs/session_*/ (comprehensive logging for each simulation)"
     echo "  - output/session_*/ (simulation results and charts)"
+    echo
+    echo "Unit Test Coverage:"
+    echo "  ✅ Order Matching (full/partial, no match, price-time priority)"
+    echo "  ✅ PNL Calculations (long/short profit/loss scenarios)"
+    echo "  ✅ Funding Applications (positive/negative rates, short positions)"
+    echo "  ✅ Liquidation Triggers (price drop/increase, safe positions)"
+    echo "  ✅ Edge Cases (zero quantity, max leverage, insufficient margin, concurrent orders, extreme prices)"
+    echo "  ✅ Integration Scenarios (complete trading flow, funding + liquidation)"
     echo
     
     # Show latest session info
