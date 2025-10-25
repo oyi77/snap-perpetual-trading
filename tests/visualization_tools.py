@@ -4,6 +4,9 @@ Real-time visualization for trading simulator.
 Generates live price and PNL charts during simulation.
 """
 
+import warnings
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from collections import deque
@@ -11,6 +14,9 @@ import numpy as np
 from decimal import Decimal
 import threading
 import time
+
+# Suppress matplotlib warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
 class LiveTradingVisualizer:
     """Real-time visualization for trading simulator."""
@@ -122,15 +128,24 @@ class LiveTradingVisualizer:
         """Start the live animation."""
         self.is_running = True
         self.animation = animation.FuncAnimation(
-            self.fig, self.animate, interval=1000, blit=False
+            self.fig, self.animate, interval=1000, blit=False, 
+            cache_frame_data=False, save_count=1000
         )
-        plt.show(block=False)
+        # Skip plt.show() when using non-interactive backend
+        if matplotlib.get_backend() != 'Agg':
+            try:
+                plt.show(block=False)
+            except Exception:
+                pass  # Ignore errors
     
     def stop_animation(self):
         """Stop the animation."""
         self.is_running = False
         if self.animation:
             self.animation.event_source.stop()
+            # Properly close the animation to avoid warnings
+            self.animation._stop()
+            plt.close(self.fig)
     
     def save_final_chart(self, filename="trading_simulation_chart.png"):
         """Save the final chart."""

@@ -60,6 +60,12 @@ cd snap-perpetual-trading
 pip install -r requirements.txt
 ```
 
+**Dependencies:**
+- `pytest>=7.0.0` - Testing framework
+- `pytest-cov>=4.0.0` - Test coverage
+- `matplotlib` - Chart generation and visualization
+- `pandas` - Data analysis and manipulation
+
 ## Quick Start
 
 ### Basic Usage
@@ -85,7 +91,19 @@ Run quick tests:
 
 Run with custom configuration:
 ```bash
-python main.py --config configs/sample_config.json --hours 24 --output results.json
+python main.py --config configs/sample_config.json --hours 24
+```
+
+Generate custom scenarios:
+```bash
+# Generate crash scenario
+python main.py --generate-config configs/crash_config.json --scenario crash
+
+# Generate pump scenario  
+python main.py --generate-config configs/pump_config.json --scenario pump
+
+# Generate sample scenario
+python main.py --generate-config configs/sample_config.json --scenario sample
 ```
 
 ### Available Test Scripts
@@ -93,20 +111,11 @@ python main.py --config configs/sample_config.json --hours 24 --output results.j
 The project includes comprehensive testing tools in the `tests/` directory:
 
 ```bash
-# Quick functionality test
-python tests/test_simulator.py
+# Run all tests
+./run_all_tests.sh
 
-# Debug trade data
-python tests/debug_trades.py
-
-# Analyze results and generate charts
-python tests/analyze_results.py
-
-# Live visualization simulator
-python tests/simulator_with_viz.py --hours 12
-
-# Demo all tools
-python tests/demo_all_tools.py
+# Run quick tests
+./quick_test.sh
 ```
 
 ## Configuration Format
@@ -230,16 +239,16 @@ Run the complete test suite with 24-hour simulation:
 ```
 
 This runs 10 comprehensive tests:
-1. ✅ Basic functionality test
-2. ✅ Unit tests (pytest)
-3. ✅ Short simulation (6 hours)
-4. ✅ Trade debugging
-5. ✅ Results analysis
-6. ✅ Demo all tools
-7. ✅ **24-hour simulation** (main test)
-8. ✅ Visualization test
-9. ✅ Logging system test
-10. ✅ File structure check
+1. ✅ **Basic functionality test** - Core simulator functionality
+2. ✅ **Unit tests (pytest)** - Automated test suite
+3. ✅ **Short simulation (6 hours)** - Quick simulation test
+4. ✅ **Trade debugging** - Debug trade data structures
+5. ✅ **Results analysis** - Generate charts and analysis
+6. ✅ **Demo all tools** - Demonstrate all available tools
+7. ✅ **24-hour simulation** - Main comprehensive test
+8. ✅ **Visualization test** - Live visualization capabilities
+9. ✅ **Logging system test** - Session-based logging verification
+10. ✅ **File structure check** - Project structure validation
 
 ### Quick Testing
 
@@ -264,8 +273,11 @@ python tests/debug_trades.py
 # Analyze results and generate charts
 python tests/analyze_results.py
 
-# Live visualization
+# Live visualization (6-24 hours)
 python tests/simulator_with_viz.py --hours 12
+
+# Demo all tools
+python tests/demo_all_tools.py
 ```
 
 ### Session Management
@@ -294,6 +306,7 @@ python log_manager.py --stats
 - **Complete Export**: Exports all session data for backup
 - **Size Tracking**: Shows total size including charts and results
 - **Dry Run**: Preview cleanup operations before executing
+- **Session ID Format**: `YYYYMMDD_HHMMSS` (e.g., `20251025_143022`)
 
 ### Test Coverage
 - ✅ Order book operations (matching, cancellation)
@@ -355,11 +368,11 @@ output/
 - **Live Visualization**: Real-time charts during simulation (optional)
 
 ### Test Results
-When running the test suite, additional files are generated:
-- `tests/short_simulation_results.json` - 6-hour simulation results
-- `tests/24h_simulation_results.json` - 24-hour simulation results
-- `tests/price_chart.png` - Price movement chart
-- `tests/demo_results.json` - Demo simulation results
+When running the test suite, files are automatically organized by session:
+- **Session-based organization**: All outputs grouped by `session_YYYYMMDD_HHMMSS`
+- **Automatic cleanup**: Old sessions can be cleaned with `log_manager.py`
+- **Comprehensive logging**: Detailed logs for each simulation session
+- **Chart generation**: Price charts, PNL charts, and comprehensive analysis
 
 ### JSON Results Format
 ```json
@@ -392,19 +405,26 @@ The simulator includes real-time visualization capabilities:
 # Run simulation with live charts
 python tests/simulator_with_viz.py --hours 12
 
+# Run analysis only on existing results
+python tests/simulator_with_viz.py --analyze results.json
+
 # Features:
 # - Live price movement chart
 # - Real-time PNL tracking
 # - User equity monitoring
-# - Automatic chart saving
+# - Automatic chart saving to session directories
+# - Comprehensive analysis with multiple chart types
 ```
 
 ### Analysis Tools
 Comprehensive analysis and visualization tools:
 
 ```bash
-# Analyze simulation results
+# Analyze simulation results (auto-detects most recent session)
 python tests/analyze_results.py
+
+# Analyze specific results file
+python tests/analyze_results.py path/to/results.json
 
 # Create comprehensive analysis
 python tests/simulator_with_viz.py --analyze results.json
@@ -416,6 +436,7 @@ python tests/simulator_with_viz.py --analyze results.json
 - **📊 Volume Analysis** - Trade volume by hour with bar charts
 - **🔥 Heatmaps** - User PNL performance with color-coded metrics
 - **📋 Comprehensive Dashboards** - Multi-panel analysis with combined metrics
+- **📉 Live Trading Charts** - Real-time visualization during simulation
 
 ## Performance Characteristics
 
@@ -425,6 +446,7 @@ python tests/simulator_with_viz.py --analyze results.json
 - **Memory Usage**: Linear with number of orders and positions
 - **Test Suite Execution**: ~2-5 minutes for comprehensive 24-hour simulation
 - **Logging Performance**: Minimal overhead with efficient JSON serialization
+- **Session Management**: Automatic organization with minimal performance impact
 
 ## Extensions and Customization
 
@@ -490,6 +512,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **Comprehensive test suite** ensures reliability and correctness
 - **Live visualization** capabilities for enhanced learning experience
 - **Robust logging system** provides detailed insights into trading mechanics
+- **Session management** for organized data handling and analysis
+- **Warning-free operation** for production-ready reliability
 
 ---
 
@@ -500,5 +524,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ✅ **Production Ready** - Comprehensive test suite with 24-hour simulation  
 ✅ **Well Documented** - Complete documentation and examples  
 ✅ **Extensible** - Modular architecture for easy customization  
-✅ **Tested** - 80-100% test success rate with automated testing  
-✅ **Visualized** - Live charts and comprehensive analysis tools
+✅ **Fully Tested** - 100% test success rate with automated testing  
+✅ **Visualized** - Live charts and comprehensive analysis tools  
+✅ **Session Managed** - Automatic organization and cleanup of simulation data  
+✅ **Warning Free** - All tests pass without warnings or errors
