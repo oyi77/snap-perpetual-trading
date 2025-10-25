@@ -121,10 +121,12 @@ class TradingSimulator:
                 # Log price update
                 self.logger.log_price_update(hour, old_price, new_price, price_change, price_change_percent)
             
+            # Update market data for position PNL calculations
+            market_data = self.price_oracle.get_market_data()
+            self.position_manager.update_market_data(market_data)
+            
             # Check for liquidations
-            liquidations = self.liquidation_engine.check_liquidations(
-                self.price_oracle.get_market_data()
-            )
+            liquidations = self.liquidation_engine.check_liquidations(market_data)
             
             for liquidation in liquidations:
                 self.logger.log_liquidation(hour, liquidation)

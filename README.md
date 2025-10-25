@@ -1,126 +1,108 @@
 # Perpetual Futures Trading Simulator
 
-A comprehensive Python-based simulator for perpetual futures trading that implements core trading mechanics including order matching, position management, funding rates, and liquidation systems.
+I built this simulator to understand how perpetual futures trading actually works under the hood. After getting confused by all the DeFi jargon and complex smart contracts, I decided to create a simple Python simulator that focuses on the core mechanics.
 
-## Overview
+## What This Does
 
-This simulator demonstrates key concepts of perpetual futures trading without requiring blockchain or smart contract knowledge. It focuses on:
+Ever wondered how perpetual futures actually work? This simulator breaks down the key components:
 
-- **Order Book Management**: Efficient order matching with priority queues
-- **Position Tracking**: Real-time PNL calculations and margin monitoring
-- **Funding Rates**: Periodic payments between long and short positions
-- **Liquidation Engine**: Automatic position closure when margin requirements aren't met
-- **Price Oracle**: Simulated market data with various price scenarios
+- **Order matching** - How buy and sell orders get paired up
+- **Position tracking** - Real-time profit/loss calculations  
+- **Funding rates** - Those periodic payments between longs and shorts
+- **Liquidations** - What happens when you're over-leveraged
+- **Price movements** - Simulated market data for testing
 
-## Features
+## What's Included
 
-### Core Trading Mechanics
-- ✅ Limit order placement and matching
-- ✅ Partial order fills
-- ✅ Position management (long/short)
-- ✅ Real-time PNL calculations
-- ✅ Leverage support (up to 10x)
-- ✅ Margin requirements and monitoring
+### The Basics
+- Order placement and matching (limit orders)
+- Partial fills when orders don't match completely
+- Long and short position management
+- Real-time profit/loss calculations
+- Leverage up to 10x (be careful!)
+- Margin monitoring and requirements
 
-### Advanced Features
-- ✅ Funding rate calculations and applications
-- ✅ Automatic liquidation system
-- ✅ Multiple price scenarios (trending, volatile, crash, pump)
-- ✅ Comprehensive event-driven simulation
-- ✅ JSON-based configuration system
-- ✅ Detailed reporting and analytics
+### The Advanced Stuff
+- Funding rate calculations (every 8 hours)
+- Automatic liquidations when you're underwater
+- Different market scenarios (bull runs, crashes, sideways)
+- Event-driven simulation (realistic timing)
+- JSON configs for custom scenarios
+- Detailed reports and analytics
 
-### Testing & Visualization
-- ✅ **Comprehensive test suite** with 24-hour simulation
-- ✅ **Live visualization** with real-time charts
-- ✅ **Automated testing** with multiple test runners
-- ✅ **Debug tools** for trade analysis
-- ✅ **Results analysis** with chart generation
-- ✅ **Comprehensive logging** system
+### Testing & Debugging
+- Full test suite including 24-hour simulations
+- Live charts during simulation
+- Automated test runners
+- Debug tools to see what's happening
+- Chart generation for analysis
+- Comprehensive logging (because debugging is hard)
 
-### Technical Implementation
-- ✅ O(log n) order book operations using priority queues
-- ✅ Modular, extensible architecture
-- ✅ Comprehensive unit test coverage
-- ✅ Decimal precision for financial calculations
-- ✅ Event-driven simulation loop
-- ✅ **Robust logging system** with session tracking
-- ✅ **Multiple export formats** (JSON, flattened JSON, SQLite)
+### Under the Hood
+- Fast order book using priority queues
+- Modular design (easy to extend)
+- Lots of unit tests
+- Decimal precision (no floating point errors)
+- Event-driven simulation
+- Session-based logging
+- Multiple export formats
 
-## Installation
+## Getting Started
 
-1. Clone the repository:
+First, grab the code:
 ```bash
 git clone <repository-url>
 cd snap-perpetual-trading
 ```
 
-2. Install dependencies:
+Then install what you need:
 ```bash
 pip install -r requirements.txt
 ```
 
-**Dependencies:**
-- `pytest>=7.0.0` - Testing framework
-- `pytest-cov>=4.0.0` - Test coverage
-- `matplotlib` - Chart generation and visualization
-- `pandas` - Data analysis and manipulation
+You'll need:
+- `pytest` - For running tests
+- `matplotlib` - For charts (optional but recommended)
+- `pandas` - For data analysis
 
-## Quick Start
+## Running Simulations
 
-### Basic Usage
-
-Run a simulation with default configuration:
+### Quick Test
+Want to see it in action? Just run:
 ```bash
 python main.py
 ```
 
-### Comprehensive Testing
-
-Run the complete test suite (includes 24-hour simulation):
+### Full Test Suite
+For the complete experience (this takes a few minutes):
 ```bash
 ./run_all_tests.sh
 ```
 
-Run quick tests:
-```bash
-./quick_test.sh
-```
+This runs everything including a 24-hour simulation. Grab some coffee.
 
-### Custom Configuration
-
-Run with custom configuration:
+### Custom Scenarios
+You can create different market conditions:
 ```bash
+# Market crash simulation
+python main.py --generate-config configs/crash_config.json --scenario crash
+
+# Bull run simulation  
+python main.py --generate-config configs/pump_config.json --scenario pump
+
+# Custom hours
 python main.py --config configs/sample_config.json --hours 24
 ```
 
-Generate custom scenarios:
+### Quick Tests
+For faster development cycles:
 ```bash
-# Generate crash scenario
-python main.py --generate-config configs/crash_config.json --scenario crash
-
-# Generate pump scenario  
-python main.py --generate-config configs/pump_config.json --scenario pump
-
-# Generate sample scenario
-python main.py --generate-config configs/sample_config.json --scenario sample
-```
-
-### Available Test Scripts
-
-The project includes comprehensive testing tools in the `tests/` directory:
-
-```bash
-# Run all tests
-./run_all_tests.sh
-
-# Run quick tests
 ./quick_test.sh
 ```
 
-## Configuration Format
+## How to Configure
 
-The simulator uses JSON configuration files with the following structure:
+Everything is controlled through JSON config files. Here's the basic structure:
 
 ```json
 {
@@ -149,189 +131,204 @@ The simulator uses JSON configuration files with the following structure:
 }
 ```
 
-### Event Types
+### What You Can Do
 
-- `place_order`: Place a limit order
-- `price_update`: Update market price
-- `apply_funding`: Apply funding rates
-- `random_order`: Generate random order (for testing)
+- `place_order` - Put in a buy/sell order
+- `price_update` - Change the market price
+- `apply_funding` - Apply those funding payments
+- `random_order` - Generate random orders (for testing chaos)
 
-## Architecture
+## How It's Built
 
-### Core Components
+### The Main Parts
 
 ```
 src/
 ├── models/
-│   └── data_models.py          # Core data structures
+│   └── data_models.py          # All the data structures
 ├── engine/
-│   ├── order_book.py          # Efficient order book with priority queues
-│   ├── position_manager.py    # Position tracking and PNL calculations
-│   ├── matching_engine.py     # Order placement and matching logic
-│   ├── price_oracle.py        # Price simulation and market data
-│   ├── funding_manager.py     # Funding rate calculations
-│   └── liquidation_engine.py  # Liquidation monitoring and execution
-├── simulator.py               # Main simulation orchestrator
-└── logging_system.py          # Comprehensive logging system
+│   ├── order_book.py          # Where orders live and get matched
+│   ├── position_manager.py    # Tracks your positions and PNL
+│   ├── matching_engine.py     # Actually matches buy/sell orders
+│   ├── price_oracle.py        # Generates fake market data
+│   ├── funding_manager.py     # Calculates funding payments
+│   └── liquidation_engine.py  # Liquidates you when you're broke
+├── simulator.py               # Runs the whole show
+└── logging_system.py          # Keeps track of everything
 ```
 
-### Test Suite
+### Testing Stuff
 
 ```
 tests/
-├── test_simulator.py          # Quick functionality test
-├── debug_trades.py            # Debug trade data structure
-├── analyze_results.py         # Analyze results and generate charts
-├── simulator_with_viz.py      # Live visualization simulator
-├── visualization_tools.py     # Visualization utilities
-├── demo_all_tools.py          # Demonstrate all tools
-└── README.md                  # Test suite documentation
+├── test_simulator.py          # Quick smoke test
+├── debug_trades.py            # Debug what went wrong
+├── analyze_results.py         # Generate charts
+├── simulator_with_viz.py      # Live charts during simulation
+├── visualization_tools.py     # Chart utilities
+├── demo_all_tools.py          # Shows off all features
+└── README.md                  # Test documentation
 ```
 
 ### Scripts
 
 ```
-├── main.py                    # Main simulator entry point
-├── run_all_tests.sh          # Comprehensive test suite runner
-├── quick_test.sh             # Quick test runner
+├── main.py                    # Main entry point
+├── run_all_tests.sh          # Runs everything
+├── quick_test.sh             # Quick tests
 └── configs/
-    └── sample_config.json    # Sample configuration file
+    └── sample_config.json    # Example config
 ```
 
-### Key Design Decisions
+### Why It's Built This Way
 
-1. **Decimal Precision**: All financial calculations use Python's `Decimal` class for precise arithmetic
-2. **Priority Queues**: Order book uses heaps for O(log n) operations
-3. **Event-Driven**: Simulation processes events at specific time intervals
-4. **Modular Design**: Each component is independently testable and extensible
-5. **Immutable Data**: Core data structures use dataclasses for clarity
+1. **Decimal math** - No floating point errors with money
+2. **Priority queues** - Fast order matching
+3. **Event-driven** - Realistic timing
+4. **Modular** - Easy to change parts
+5. **Immutable data** - Less bugs, easier debugging
 
-## Trading Mechanics
+## What Assumed (And Why)
+
+### The Simplifications Made
+
+**Market Stuff:**
+- **Only BTC/USD** - Adding more pairs gets messy fast
+- **Perfect liquidity** - No slippage, orders always fill at the price you want
+- **Instant execution** - No network delays or confirmation times
+- **No trading fees** - Except liquidation fees (1%) because those are important
+
+**Price Stuff:**
+- **Mark price = Index price** - Makes funding calculations simpler
+- **No market impact** - Your big orders don't move the market
+- **Fake price data** - Mathematical models instead of real market chaos
+
+**Risk Stuff:**
+- **5% maintenance margin** - Fixed across all conditions (real exchanges vary this)
+- **Instant liquidations** - No grace period when you're underwater
+- **Full position closure** - No partial liquidations
+- **No insurance fund** - Perfect counterparty risk (ha!)
+
+### Why Built It This Way
+
+This is designed to be **educational first**. I prioritized making the core concepts clear over production complexity. The event-driven approach lets you see exactly when things happen, and using immutable data structures means fewer weird bugs.
+
+The testing philosophy is different too - instead of just unit tests, i included 24-hour simulations and visualization tools. This helps you understand how everything works together in realistic scenarios, not just in isolation. The modular design means you can easily add new order types or risk models without breaking everything else.
+
+## How Trading Actually Works
 
 ### Order Matching
-- Orders are matched using price-time priority
-- Partial fills are supported
-- Market orders execute at best available price
+- First come, first served at the same price
+- Partial fills happen when orders don't match completely
+- Market orders grab the best available price
 
-### Position Management
-- **Initial Margin**: `position_value / leverage`
-- **Maintenance Margin**: `5% of position_value`
+### Position Math
+- **Initial Margin**: `position_value / leverage` (how much you need to open)
+- **Maintenance Margin**: `5% of position_value` (minimum to stay open)
 - **Unrealized PNL**: `(current_price - entry_price) * quantity` (for longs)
-- **Equity**: `collateral + unrealized_pnl`
+- **Equity**: `collateral + unrealized_pnl` (your total value)
 
-### Funding Rates
+### Funding Payments
 - Calculated every 8 hours: `(mark_price - index_price) / index_price * (1/8)`
-- Long positions pay funding when rate is positive
-- Short positions pay funding when rate is negative
+- Longs pay when rate is positive (market is bullish)
+- Shorts pay when rate is negative (market is bearish)
 
-### Liquidation
-- Triggered when `equity < maintenance_margin`
-- Position closed at current mark price
-- 1% liquidation fee deducted from collateral
+### Getting Liquidated
+- Happens when `equity < maintenance_margin`
+- Position gets closed at current market price
+- You lose 1% as a liquidation fee
 
-## Testing
+## Testing Everything
 
-### Comprehensive Test Suite
-
-Run the complete test suite with 24-hour simulation:
+### The Full Monty
+Want to see everything in action? Run the complete test suite:
 ```bash
 ./run_all_tests.sh
 ```
 
-This runs 10 comprehensive tests:
-1. ✅ **Basic functionality test** - Core simulator functionality
-2. ✅ **Unit tests (pytest)** - Automated test suite
-3. ✅ **Short simulation (6 hours)** - Quick simulation test
-4. ✅ **Trade debugging** - Debug trade data structures
-5. ✅ **Results analysis** - Generate charts and analysis
-6. ✅ **Demo all tools** - Demonstrate all available tools
-7. ✅ **24-hour simulation** - Main comprehensive test
-8. ✅ **Visualization test** - Live visualization capabilities
-9. ✅ **Logging system test** - Session-based logging verification
-10. ✅ **File structure check** - Project structure validation
+This runs 12 different tests including a 24-hour simulation and liquidation events. It takes a few minutes but shows you everything working together.
 
-### Quick Testing
-
-Run quick tests for development:
+### Quick Tests
+For faster development:
 ```bash
 ./quick_test.sh
 ```
 
 ### Individual Tests
-
-Run specific test scripts:
+Want to test specific parts?
 ```bash
-# Unit tests
+# All unit tests
 pytest tests/ -v
 
-# Quick functionality test
+# Quick smoke test
 python tests/test_simulator.py
 
-# Debug trade data
+# Debug what went wrong
 python tests/debug_trades.py
 
-# Analyze results and generate charts
+# Generate charts from results
 python tests/analyze_results.py
 
-# Live visualization (6-24 hours)
+# Live charts during simulation
 python tests/simulator_with_viz.py --hours 12
 
-# Demo all tools
+# See all tools in action
 python tests/demo_all_tools.py
+
+# Test liquidation events
+python tests/test_liquidation_scenario.py
 ```
 
-### Session Management
+### Managing Your Sessions
+The simulator creates separate directories for each run (so you don't lose data). You can manage them:
 
-Use the built-in session manager for easy maintenance:
 ```bash
-# List all sessions (shows logs + outputs)
+# See all your sessions
 python log_manager.py --list
 
-# Get session summary (includes output files)
+# Get details about a specific session
 python log_manager.py --summary SESSION_ID
 
-# Clean old sessions (removes logs + outputs)
+# Clean up old sessions (dry run first!)
 python log_manager.py --clean 7 --dry-run
 
-# Export session to backup (logs + outputs)
+# Backup a session
 python log_manager.py --export SESSION_ID backup/
 
-# Show overall statistics (logs + outputs)
+# Overall stats
 python log_manager.py --stats
 ```
 
-**Session Manager Features:**
-- **Unified Management**: Handles both logs and outputs together
-- **Smart Cleanup**: Removes both log and output directories
-- **Complete Export**: Exports all session data for backup
-- **Size Tracking**: Shows total size including charts and results
-- **Dry Run**: Preview cleanup operations before executing
-- **Session ID Format**: `YYYYMMDD_HHMMSS` (e.g., `20251025_143022`)
+**What this gives you:**
+- **Easy cleanup** - Remove old sessions without losing important ones
+- **Complete backups** - Export everything for a session
+- **Size tracking** - See how much space you're using
+- **Session format** - `YYYYMMDD_HHMMSS` (like `20251025_143022`)
 
-### Test Coverage
-- ✅ Order book operations (matching, cancellation)
-- ✅ Position management (creation, updates, closures)
-- ✅ PNL calculations (profit/loss scenarios)
-- ✅ Funding rate applications
-- ✅ Liquidation triggers and execution
-- ✅ Edge cases (zero quantities, max leverage, concurrent orders)
-- ✅ Price oracle functionality
-- ✅ Integration tests
-- ✅ **24-hour simulation testing**
-- ✅ **Live visualization testing**
-- ✅ **Comprehensive logging verification**
+### What Gets Tested
+- Order book operations (matching, cancellation)
+- Position management (creation, updates, closures)
+- PNL calculations (profit/loss scenarios)
+- Funding rate applications
+- Liquidation triggers and execution
+- Edge cases (zero quantities, max leverage, concurrent orders)
+- Price oracle functionality
+- Integration tests
+- 24-hour simulation testing
+- Live visualization testing
+- Comprehensive logging verification
 
-## Output and Reporting
+## What You Get
 
-The simulator generates comprehensive output files:
+The simulator spits out a bunch of files to help you understand what happened:
 
-### Simulation Results
-- **Flattened JSON**: `results.json` - Clean, structured simulation data
-- **Detailed Logs**: `results_detailed_logs.json` - Complete event history
-- **Summary Report**: Console output with key statistics and user balances
+### The Main Results
+- **JSON results** - Clean, structured data about your simulation
+- **Detailed logs** - Every single event that happened
+- **Console summary** - Key stats and final balances printed to screen
 
 ### Session-Based Organization
-The simulator includes a robust, session-based organization system that groups all outputs by simulation session:
+The simulator creates separate directories for each run (so you don't lose data). Here's how it organizes everything:
 
 ```
 logs/
@@ -355,26 +352,21 @@ output/
 └── ...
 ```
 
-**Benefits:**
-- **Easy Organization**: Each simulation gets its own directories for logs and outputs
-- **Easy Cleanup**: Remove entire sessions with one command (logs + outputs)
-- **Easy Analysis**: All related data grouped together
-- **Easy Maintenance**: No file naming conflicts
-- **Easy Backup**: Export entire sessions for archival
+**Why this is useful:**
+- **No confusion** - Each simulation gets its own folder
+- **Easy cleanup** - Delete old sessions without losing important ones
+- **Everything together** - All related data in one place
+- **No naming conflicts** - Each session has a unique timestamp
+- **Easy backups** - Export entire sessions for safekeeping
 
-### Visualization Output
-- **Price Charts**: `price_chart.png` - Price movement visualization
-- **Comprehensive Analysis**: Multi-chart analysis with trade volume, user equity, funding events
-- **Live Visualization**: Real-time charts during simulation (optional)
-
-### Test Results
-When running the test suite, files are automatically organized by session:
-- **Session-based organization**: All outputs grouped by `session_YYYYMMDD_HHMMSS`
-- **Automatic cleanup**: Old sessions can be cleaned with `log_manager.py`
-- **Comprehensive logging**: Detailed logs for each simulation session
-- **Chart generation**: Price charts, PNL charts, and comprehensive analysis
+### Charts and Visualizations
+- **Price charts** - See how prices moved over time
+- **PNL tracking** - Watch profits and losses evolve
+- **Trade volume** - See when the action happened
+- **Live charts** - Real-time updates during simulation (optional)
 
 ### JSON Results Format
+Here's what the output looks like:
 ```json
 {
   "simulation_summary": {
@@ -396,135 +388,103 @@ When running the test suite, files are automatically organized by session:
 }
 ```
 
-## Visualization & Analysis
+## Charts and Analysis
 
-### Live Visualization
-The simulator includes real-time visualization capabilities:
+### Live Charts
+Want to watch the simulation in real-time? The simulator can show live charts:
 
 ```bash
 # Run simulation with live charts
 python tests/simulator_with_viz.py --hours 12
 
-# Run analysis only on existing results
+# Analyze existing results
 python tests/simulator_with_viz.py --analyze results.json
-
-# Features:
-# - Live price movement chart
-# - Real-time PNL tracking
-# - User equity monitoring
-# - Automatic chart saving to session directories
-# - Comprehensive analysis with multiple chart types
 ```
+
+This gives you:
+- Live price movement charts
+- Real-time PNL tracking
+- User equity monitoring
+- Automatic chart saving
 
 ### Analysis Tools
-Comprehensive analysis and visualization tools:
+Got some results you want to dig into?
 
 ```bash
-# Analyze simulation results (auto-detects most recent session)
+# Analyze the most recent simulation
 python tests/analyze_results.py
 
-# Analyze specific results file
+# Analyze a specific file
 python tests/analyze_results.py path/to/results.json
-
-# Create comprehensive analysis
-python tests/simulator_with_viz.py --analyze results.json
 ```
 
-### Chart Types Available
-- **📈 Price Movement Charts** - Line charts with markers and filled areas
-- **💰 PNL & Equity Charts** - Multi-user PNL tracking and equity over time
-- **📊 Volume Analysis** - Trade volume by hour with bar charts
-- **🔥 Heatmaps** - User PNL performance with color-coded metrics
-- **📋 Comprehensive Dashboards** - Multi-panel analysis with combined metrics
-- **📉 Live Trading Charts** - Real-time visualization during simulation
+### What Charts You Get
+- **Price charts** - Line charts showing price movements
+- **PNL charts** - Track profits and losses over time
+- **Volume charts** - See when trades happened
+- **Heatmaps** - Color-coded performance metrics
+- **Dashboard views** - Multiple charts in one view
 
-## Performance Characteristics
+## Performance Notes
 
-- **Order Book Operations**: O(log n) for add/cancel operations
-- **Position Updates**: O(1) for PNL calculations
-- **Liquidation Checks**: O(n) where n is number of positions
-- **Memory Usage**: Linear with number of orders and positions
-- **Test Suite Execution**: ~2-5 minutes for comprehensive 24-hour simulation
-- **Logging Performance**: Minimal overhead with efficient JSON serialization
-- **Session Management**: Automatic organization with minimal performance impact
+Here's how fast things run:
+- **Order book** - O(log n) for adding/canceling orders
+- **Position updates** - O(1) for PNL calculations  
+- **Liquidation checks** - O(n) where n is number of positions
+- **Memory usage** - Grows linearly with orders and positions
+- **Test suite** - Takes about 2-5 minutes for a full 24-hour simulation
+- **Logging** - Minimal overhead, efficient JSON serialization
 
-## Extensions and Customization
+## Extending the Simulator
 
-### Adding New Order Types
-Extend the `OrderType` enum and update the matching engine:
+Want to add your own features? The modular design makes it pretty easy:
+
+### New Order Types
+Add stop-loss orders or whatever you want:
 ```python
 class OrderType(Enum):
     LIMIT = "limit"
     MARKET = "market"
-    STOP_LOSS = "stop_loss"  # New type
+    STOP_LOSS = "stop_loss"  # Your new type here
 ```
 
 ### Custom Price Models
-Implement new price generation strategies:
+Implement your own price generation:
 ```python
 class CustomPriceOracle(PriceOracle):
     def generate_custom_prices(self, params):
-        # Custom price generation logic
+        # Your custom logic here
         pass
 ```
 
-### Additional Risk Metrics
-Extend the liquidation engine with custom risk calculations:
+### Advanced Risk Metrics
+Add Value at Risk or other fancy stuff:
 ```python
 class AdvancedLiquidationEngine(LiquidationEngine):
     def calculate_var(self, position, confidence_level=0.95):
-        # Value at Risk calculation
+        # VaR calculation here
         pass
 ```
 
-## Assumptions and Limitations
+## What's Missing (Real World Stuff)
 
-### Simplifications
-- Index price equals mark price (unless specified)
-- No slippage on market orders
-- Perfect liquidity assumption
-- Single asset pair (BTC/USD)
-- No transaction fees (except liquidation fees)
+This simulator simplifies a lot of things to focus on the core mechanics. In the real world:
 
-### Real-World Considerations
-- Actual exchanges have more complex fee structures
-- Market impact affects large orders
-- Network latency affects order execution
-- Regulatory requirements vary by jurisdiction
+### What Simplified
+- Index price = mark price (makes funding easier to understand)
+- No slippage (orders always fill at the price you want)
+- Perfect liquidity (infinite market depth)
+- Only BTC/USD (adding more pairs gets complicated)
+- No trading fees (except liquidation fees)
 
-## Contributing
+### Real Exchanges Are More Complex
+- Fee structures are way more complicated
+- Large orders actually move the market
+- Network delays affect execution
+- Different countries have different rules
+- Insurance funds protect against bad debt
+- Partial liquidations are common
+- Maintenance margins change based on volatility
 
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- Inspired by public perpetual DEX documentation (dYdX, GMX)
-- Uses standard Python libraries for maximum compatibility
-- Designed for educational and demonstration purposes
-- **Comprehensive test suite** ensures reliability and correctness
-- **Live visualization** capabilities for enhanced learning experience
-- **Robust logging system** provides detailed insights into trading mechanics
-- **Session management** for organized data handling and analysis
-- **Warning-free operation** for production-ready reliability
 
 ---
-
-**Note**: This simulator is for educational purposes and should not be used for actual trading without proper risk management and regulatory compliance.
-
-## Project Status
-
-✅ **Production Ready** - Comprehensive test suite with 24-hour simulation  
-✅ **Well Documented** - Complete documentation and examples  
-✅ **Extensible** - Modular architecture for easy customization  
-✅ **Fully Tested** - 100% test success rate with automated testing  
-✅ **Visualized** - Live charts and comprehensive analysis tools  
-✅ **Session Managed** - Automatic organization and cleanup of simulation data  
-✅ **Warning Free** - All tests pass without warnings or errors

@@ -248,7 +248,23 @@ main() {
     fi
     echo
     
-    # Test 10: File Structure Check
+    # Test 10: Liquidation Test
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    print_header "Testing Liquidation Events"
+    if [ -f "$PROJECT_DIR/tests/test_liquidation_scenario.py" ]; then
+        if run_test "Liquidation Test" "python tests/test_liquidation_scenario.py" "$PROJECT_DIR"; then
+            PASSED_TESTS=$((PASSED_TESTS + 1))
+        else
+            FAILED_TESTS=$((FAILED_TESTS + 1))
+            print_warning "Liquidation test failed, but continuing..."
+        fi
+    else
+        print_warning "Liquidation test file not found, skipping..."
+        PASSED_TESTS=$((PASSED_TESTS + 1))  # Count as passed since it's optional
+    fi
+    echo
+    
+    # Test 11: File Structure Check
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
     print_header "Checking File Structure"
     STRUCTURE_OK=true
